@@ -185,24 +185,24 @@ describe("AuthProvider", () => {
         expect(CustomUserManager.prototype.signinRedirect).toHaveBeenCalled();
     });
 
-    // it("should should throw when no UserManager implementation exists", async () => {
-    //     // arrange
-    //     const wrapper = createWrapper({
-    //         ...settingsStub,
-    //         implementation: null,
-    //     });
-    //     const { result } = renderHook(() => useAuth(), {
-    //         wrapper,
-    //     });
+    it("should should throw when no UserManager implementation exists", async () => {
+        // arrange
+        const wrapper = createWrapper({
+            ...settingsStub,
+            implementation: null,
+        });
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
 
-    //     // act
-    //     await waitFor(() =>
-    //         expect(result.current.signinRedirect()).toThrowError()
-    //     );
-    //     // expect(() => result.current.signinRedirect())
-    //     //     .toThrow(Error);
-    //     // expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
-    // });
+        // act
+        act(() => result.current.signinRedirect()).catch((err) =>
+            expect(err).toBeInstanceOf(Error)
+        );
+        // expect(() => result.current.signinRedirect())
+        //     .toThrow(Error);
+        // expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
+    });
 
     it("should set isLoading to false after initializing", async () => {
         // arrange
