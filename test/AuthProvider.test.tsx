@@ -143,7 +143,14 @@ describe("AuthProvider", () => {
 
     // it("should get the user", async () => {
     //     // arrange
-    //     mocked(UserManager.prototype).getUser.mockResolvedValueOnce(user);
+    //     let resolve: (value: User | PromiseLike<User | null> | null) => void;
+    //     mocked(UserManager.prototype).getUser.mockReturnValue(
+    //         new Promise((_resolve) => {
+    //             resolve = _resolve
+    //             return user
+    //         })
+    //     );
+
     //     const wrapper = createWrapper({ ...settingsStub });
 
     //     // act
@@ -151,11 +158,13 @@ describe("AuthProvider", () => {
     //         wrapper,
     //     });
 
-    //     await waitFor(() =>
-    //         expect(UserManager.prototype.getUser).toHaveBeenCalled()
-    //     );
+    //     await waitFor(() => {
+    //         expect(UserManager.prototype.getUser).toHaveBeenCalled();
+    //     });
 
-    //     // await waitFor(() => expect(result.current.user).toBe(user));
+    //     await act(() => resolve(user))
+
+    //     await waitFor(() => [])
     // });
 
     it("should use a custom UserManager implementation", async () => {
@@ -191,17 +200,14 @@ describe("AuthProvider", () => {
             ...settingsStub,
             implementation: null,
         });
-        const { result } = renderHook(() => useAuth(), {
-            wrapper,
-        });
 
-        // act
-        act(() => result.current.signinRedirect()).catch((err) =>
-            expect(err).toBeInstanceOf(Error)
-        );
-        // expect(() => result.current.signinRedirect())
-        //     .toThrow(Error);
-        // expect(UserManager.prototype.signinRedirect).not.toHaveBeenCalled();
+        try {
+            renderHook(() => useAuth(), {
+                wrapper,
+            });
+        } catch (err) {
+            expect(err).toBeInstanceOf(Error);
+        }
     });
 
     it("should set isLoading to false after initializing", async () => {
